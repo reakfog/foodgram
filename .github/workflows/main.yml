@@ -92,7 +92,6 @@ jobs:
                 echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env &&
                 echo LANGUAGE_CODE=${{ secrets.LANGUAGE_CODE }} >> .env &&
                 echo TIME_ZONE=${{ secrets.TIME_ZONE }} >> .env &&
-                echo EMAIL_FILE_PATH=${{ secrets.EMAIL_FILE_PATH }} >> .env &&
                 echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env &&
                 echo DB_NAME=${{ secrets.DB_NAME }} >> .env &&
                 echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env &&
@@ -100,7 +99,7 @@ jobs:
                 echo DB_HOST=${{ secrets.DB_HOST }} >> .env &&
                 echo DB_PORT=${{ secrets.DB_PORT }} >> .env
               "
-              if [ -d ~/apps/${{ secrets.GIT_PROJECT_NAME }} ];
+              if [ -d ~/apps/${{ secrets.GIT_PROJECT_NAME }}/ ];
                 then
                   cd apps/${{ secrets.GIT_PROJECT_NAME }}/ &&
                   cd backend/ &&
