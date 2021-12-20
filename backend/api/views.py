@@ -1,3 +1,14 @@
+from api.filters import IngredientNameFilter, RecipeFilter
+from api.mixins import ListRetriveViewSet
+from api.paginators import CustomPageNumberPaginator
+from api.permissions import IsAuthorOrAdminOrReadOnly
+from api.serializers import (FollowingBaseSerializer, IngredientSerializer,
+                             ManageCartSerializer, ManageFavoriteSerializer,
+                             RecipeReadSerializer, RecipeWriteSerializer,
+                             SimpleFollowSerializer, SubscribersSerializer,
+                             TagSerializer)
+from api.utils import (custom_delete_author_method,
+                       custom_delete_recipe_method, custom_get_method)
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Sum
 from django.http import HttpResponse
@@ -8,28 +19,11 @@ from djoser.compat import get_user_email
 from djoser.conf import settings
 from djoser.views import TokenCreateView, TokenDestroyView
 from djoser.views import UserViewSet as DjoserUserViewSet
+from recipes.models import Cart, Favorite, Following, Ingredient, Recipe, Tag
 from rest_framework import permissions, status, views, viewsets
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
-
-from api.filters import IngredientNameFilter, RecipeFilter
-from api.paginators import CustomPageNumberPaginator
-from api.permissions import IsAuthorOrAdminOrReadOnly
-from api.serializers import (FollowingBaseSerializer, IngredientSerializer,
-                             ManageCartSerializer, ManageFavoriteSerializer,
-                             RecipeReadSerializer, RecipeWriteSerializer,
-                             SimpleFollowSerializer, SubscribersSerializer,
-                             TagSerializer)
-from api.utils import (custom_delete_author_method,
-                       custom_delete_recipe_method, custom_get_method)
-from recipes.models import Cart, Favorite, Following, Ingredient, Recipe, Tag
 from users.models import User
-
-
-class ListRetriveViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
-    pass
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -44,7 +38,7 @@ class UserViewSet(DjoserUserViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        self.request.user.set_password(serializer.data["new_password"])
+        self.request.user.set_password(serializer.validated_data["new_password"])
         self.request.user.save()
 
         if settings.PASSWORD_CHANGED_EMAIL_CONFIRMATION:

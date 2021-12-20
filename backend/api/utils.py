@@ -1,10 +1,9 @@
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
+from recipes.models import Ingredient, IngredientRecipe
 from rest_framework import serializers, status
 from rest_framework.response import Response
-
-from recipes.models import Ingredient, IngredientRecipe
 
 ENTRY_DUPLICATION_MESSAGE = _(
     "ID '{}' duplicates provided list of IDs"
@@ -104,16 +103,16 @@ def custom_delete_recipe_method(
     )
 
 
-def list_contains_unique_objects(ids_list, id):
+def list_contains_unique_objects(ids_list, item_id):
     '''
     Function throughs validation error when
     a queryset contains duplicates
     '''
-    if id in ids_list:
+    if item_id in ids_list:
         raise serializers.ValidationError(
-            ENTRY_DUPLICATION_MESSAGE.format(id)
+            ENTRY_DUPLICATION_MESSAGE.format(item_id)
         )
-    ids_list.append(id)
+    ids_list.append(item_id)
 
 
 def negative_value_constraint(value):
