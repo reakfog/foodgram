@@ -10,16 +10,20 @@ services:
       - ../backend/.env
 
   frontend:
-    image: eperchun/foodgram_frontend:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
 
   backend:
-    image: eperchun/foodgram-backend:latest
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     restart: always 
     volumes: 
-      - static_value:/code/static/
-      - media_value:/code/media/
+      - static_value:/code/static/ 
+      - media_value:/code/media/ 
       - ../backend/:/code/
     depends_on: 
       - db 
@@ -40,7 +44,7 @@ services:
       - media_value:/var/html/media/
 
     depends_on:
-      - backend
+      - backend 
       - frontend
 
 volumes:
