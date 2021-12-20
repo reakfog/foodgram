@@ -8,11 +8,9 @@ sqlparse==0.3.1
 psycopg2-binary==2.8.6
 
 drf_yasg==1.20.0
-# PyJWT==1.7.1
 djangorestframework==3.13.1
 djangorestframework-simplejwt==4.3.0
 djoser==2.1.0
-# social-auth-app-django==5.0.0
 
 django_filter==21.1
 django-extra-fields==3.0.2
