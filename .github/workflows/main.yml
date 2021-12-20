@@ -86,12 +86,27 @@ jobs:
             script: |
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_BACKEND }}:latest
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_FRONTEND }}:latest
-              alias create_env="touch .env && echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env && echo DEBUG=${{ secrets.DEBUG }} >> .env && echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env && echo LANGUAGE_CODE=${{ secrets.LANGUAGE_CODE }} >> .env && echo TIME_ZONE=${{ secrets.TIME_ZONE }} >> .env && echo EMAIL_FILE_PATH=${{ secrets.EMAIL_FILE_PATH }} >> .env && echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env && echo DB_NAME=${{ secrets.DB_NAME }} >> .env && echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env && echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env && echo DB_HOST=${{ secrets.DB_HOST }} >> .env && echo DB_PORT=${{ secrets.DB_PORT }} >> .env"
+              alias create_env="
+                touch .env && echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env &&
+                echo DEBUG=${{ secrets.DEBUG }} >> .env &&
+                echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env &&
+                echo LANGUAGE_CODE=${{ secrets.LANGUAGE_CODE }} >> .env &&
+                echo TIME_ZONE=${{ secrets.TIME_ZONE }} >> .env &&
+                echo EMAIL_FILE_PATH=${{ secrets.EMAIL_FILE_PATH }} >> .env &&
+                echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env &&
+                echo DB_NAME=${{ secrets.DB_NAME }} >> .env &&
+                echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env &&
+                echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env &&
+                echo DB_HOST=${{ secrets.DB_HOST }} >> .env &&
+                echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+              "
               if [ -d ~/apps/${{ secrets.GIT_PROJECT_NAME }} ];
                 then
                   cd apps/${{ secrets.GIT_PROJECT_NAME }}/ &&
                   cd backend/ &&
-                  rm .env &&
+                  if [ -f .env ];
+                    then rm ./.env;
+                  fi &&
                   cd ../ &&
                   git pull &&
                   cd infra/ &&
