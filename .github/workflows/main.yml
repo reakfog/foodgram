@@ -73,8 +73,8 @@ jobs:
   deploy:
       runs-on: ubuntu-latest
       needs:
-        - build_and_push_backend_to_docker_hub
         - build_and_push_frontend_to_docker_hub
+        - build_and_push_backend_to_docker_hub
       steps:
         - name: executing remote ssh commands to deploy
           uses: appleboy/ssh-action@v0.1.4
@@ -102,15 +102,16 @@ jobs:
               if [ -d ~/apps/${{ secrets.GIT_PROJECT_NAME }}/ ];
                 then
                   cd apps/${{ secrets.GIT_PROJECT_NAME }}/ &&
-                  cd backend/ &&
-                  if [ -f .env ];
-                    then rm ./.env;
-                  fi &&
-                  cd ../ &&
-                  git pull &&
                   cd infra/ &&
                   sudo docker-compose stop &&
                   cd ../backend/ &&
+                  if [ -f .env ];
+                    then
+                      rm .env;
+                  fi &&
+                  cd ../ &&
+                  git pull &&
+                  cd backend/
                   create_env &&
                   cd ../infra/ &&
                   sudo docker-compose up -d --build &&
